@@ -14,9 +14,10 @@
         
         body {
             font-family: 'Righteous', cursive;
-            overflow: hidden;
+            overflow-x: hidden;
             touch-action: manipulation;
             background: black;
+            min-height: 100vh;
         }
 
         .animate-float {
@@ -41,7 +42,7 @@
         }
 
         .rainbow-text {
-            background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff);
+            background: linear-gradient(to right, #00fff2, #00ffcc, #00f7ff, #00ccff, #0077ff, #0044ff, #001aff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -59,14 +60,16 @@
         }
 
         @keyframes glow {
-            from { text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #e60073, 0 0 50px #e60073; }
-            to { text-shadow: 0 0 30px #fff, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6; }
+            from { text-shadow: 0 0 20px #fff, 0 0 30px #00ffff, 0 0 40px #00ffff, 0 0 50px #00ffff; }
+            to { text-shadow: 0 0 30px #fff, 0 0 40px #0088ff, 0 0 50px #0088ff, 0 0 60px #0088ff; }
         }
 
         .mega-button {
             transition: all 0.3s ease;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            height: 180px !important;
+            font-size: 3.5rem !important;
         }
 
         .mega-button:hover {
@@ -119,6 +122,9 @@
             padding: 2rem;
             position: relative;
             z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .generated-name {
@@ -126,7 +132,7 @@
             line-height: 1.2;
             padding: 2rem;
             border-radius: 20px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0,255,255,0.1);
             backdrop-filter: blur(10px);
             transform-origin: center;
             animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -135,6 +141,22 @@
         @keyframes popIn {
             0% { transform: scale(0.5); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (min-width: 768px) {
+            .grid-container {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .grid-container {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
         }
 
     </style>
@@ -178,11 +200,11 @@
             };
 
             const categories = [
-                { id: 'cute', label: 'Fofinhos', color: 'from-pink-500 to-purple-500' },
-                { id: 'powerful', label: 'Poderosos', color: 'from-red-500 to-orange-500' },
-                { id: 'hunter', label: 'Caçadores', color: 'from-green-500 to-emerald-500' },
-                { id: 'loving', label: 'Dengosos', color: 'from-purple-500 to-pink-500' },
-                { id: 'guardian', label: 'Protetores', color: 'from-blue-500 to-cyan-500' }
+                { id: 'cute', label: 'Fofinhos', color: 'from-cyan-500 to-blue-500' },
+                { id: 'powerful', label: 'Poderosos', color: 'from-blue-500 to-indigo-500' },
+                { id: 'hunter', label: 'Caçadores', color: 'from-indigo-500 to-violet-500' },
+                { id: 'loving', label: 'Dengosos', color: 'from-violet-500 to-purple-500' },
+                { id: 'guardian', label: 'Protetores', color: 'from-cyan-400 to-blue-600' }
             ];
 
             const generateName = () => {
@@ -190,14 +212,13 @@
                 
                 setIsGenerating(true);
                 
-                // Screen flash effect
                 const flash = document.createElement('div');
                 flash.style.position = 'fixed';
                 flash.style.top = '0';
                 flash.style.left = '0';
                 flash.style.width = '100%';
                 flash.style.height = '100%';
-                flash.style.backgroundColor = 'white';
+                flash.style.backgroundColor = '#00ffff';
                 flash.style.opacity = '0';
                 flash.style.transition = 'opacity 0.2s ease';
                 flash.style.pointerEvents = 'none';
@@ -205,7 +226,7 @@
                 document.body.appendChild(flash);
 
                 requestAnimationFrame(() => {
-                    flash.style.opacity = '0.5';
+                    flash.style.opacity = '0.3';
                     setTimeout(() => {
                         flash.style.opacity = '0';
                         setTimeout(() => document.body.removeChild(flash), 300);
@@ -218,7 +239,6 @@
                     setGeneratedName(randomName);
                     setIsGenerating(false);
 
-                    // Shake effect
                     document.querySelector('.main-container').style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
                     setTimeout(() => {
                         document.querySelector('.main-container').style.animation = '';
@@ -227,18 +247,18 @@
             };
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 animate-background pb-8">
+                <div className="min-h-screen bg-gradient-to-br from-blue-900 via-cyan-800 to-blue-900 animate-background">
                     <div className="main-container">
-                        <h1 className="text-8xl text-center mb-12 rainbow-text animate-float py-8">
+                        <h1 className="text-6xl md:text-8xl text-center mb-12 rainbow-text animate-float py-8">
                             🐕 Super Gerador de Nomes 🐕
                         </h1>
 
-                        <div className="grid grid-cols-2 gap-6 mb-12">
+                        <div className="grid-container mb-12">
                             {categories.map((category) => (
                                 <button
                                     key={category.id}
                                     className={`category-button rounded-2xl bg-gradient-to-r ${category.color}
-                                              ${selectedCategory === category.id ? 'ring-4 ring-white' : ''}`}
+                                              ${selectedCategory === category.id ? 'ring-4 ring-cyan-400' : ''}`}
                                     onClick={() => setSelectedCategory(category.id)}
                                 >
                                     {category.label}
@@ -247,8 +267,8 @@
                         </div>
 
                         <button
-                            className={`mega-button w-full py-8 px-6 bg-gradient-to-r from-purple-600 to-pink-600 
-                                     text-white text-4xl rounded-2xl mb-12 
+                            className={`mega-button w-full bg-gradient-to-r from-cyan-600 to-blue-600 
+                                     text-white rounded-2xl mb-12 
                                      ${isGenerating ? 'opacity-75 cursor-not-allowed' : ''}`}
                             onClick={generateName}
                             disabled={!selectedCategory || isGenerating}
