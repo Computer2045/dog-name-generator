@@ -1,292 +1,165 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐕 Super Gerador de Nomes</title>
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+import React, { useState, useEffect } from 'react';
+import { Sparkles, Dog, Zap, Heart, Shield, ChevronRight, PawPrint } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
+const ParticleRing = () => (
+  <div className="absolute inset-0 flex items-center justify-center">
+    <div className="w-64 h-64 rounded-full absolute bg-gradient-to-r from-violet-600/20 to-indigo-600/20 animate-spin-slow blur-xl" />
+    <div className="w-56 h-56 rounded-full absolute bg-gradient-to-r from-fuchsia-600/20 to-pink-600/20 animate-spin-slow blur-xl" />
+  </div>
+);
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
-        }
+const ButtonGlow = ({ color }) => (
+  <div className={`absolute inset-0 rounded-lg ${color} blur-xl opacity-50 group-hover:opacity-100 transition-opacity duration-500`} />
+);
 
-        .animate-spin-slow {
-            animation: spin 8s linear infinite;
-        }
+const DogNameGenerator = () => {
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [generatedName, setGeneratedName] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [glowPosition, setGlowPosition] = useState({ x: 0, y: 0 });
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      setGlowPosition({ x, y });
+    };
 
-        .animate-bounce-custom {
-            animation: bounce 1s ease infinite;
-        }
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(-25%); animation-timing-function: cubic-bezier(0.8,0,1,1); }
-            50% { transform: none; animation-timing-function: cubic-bezier(0,0,0.2,1); }
-        }
+  const dogNames = {
+    cute: [
+      'Sr. Pipoquinha', 'Don Algodão', 'Conde Marshmallow', 'Lord Brigadeiro',
+      'Dr. Fofinho', 'Mestre Biscoito', 'Barão Paçoca', 'Duque Pudim',
+      'Príncipe Nugget', 'Sir Bolinha', 'Rei Docinho', 'Marquês Nutella'
+    ],
+    powerful: [
+      'Imperador Thor', 'Capitão Estrela', 'General Trovão', 'Mestre Cosmos',
+      'Lord Relâmpago', 'Comandante Supernova', 'Marechal Furacão', 'Prof. Poder'
+    ],
+    hunter: [
+      'Agente Farejador', 'Detetive Bigodes', 'Inspetor Patinha', 'Dr. Focinho',
+      'Comandante Faro', 'Major Radar', 'Capitão Caçador', 'Xerife Rastro'
+    ],
+    loving: [
+      'Dom Xodó', 'Sir Carinho', 'Lord Dengoso', 'Mestre Abraço',
+      'Príncipe Amor', 'Conde Beijinho', 'Dr. Coração', 'Prof. Fofura'
+    ],
+    guardian: [
+      'General Guardião', 'Capitão Escudo', 'Major Protetor', 'Comandante Vigília',
+      'Marechal Sentinela', 'Lord Defensor', 'Sir Guardião', 'Dom Protetor'
+    ]
+  };
 
-        .animate-glow {
-            animation: glow 2s ease-in-out infinite alternate;
-        }
+  const categories = [
+    { id: 'cute', label: 'Fofinhos', icon: Sparkles, glow: 'bg-pink-500' },
+    { id: 'powerful', label: 'Poderosos', icon: Zap, glow: 'bg-amber-500' },
+    { id: 'hunter', label: 'Caçadores', icon: Dog, glow: 'bg-emerald-500' },
+    { id: 'loving', label: 'Dengosos', icon: Heart, glow: 'bg-red-500' },
+    { id: 'guardian', label: 'Protetores', icon: Shield, glow: 'bg-blue-500' }
+  ];
 
-        @keyframes glow {
-            from { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073; }
-            to { text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6; }
-        }
+  const generateName = () => {
+    if (!selectedCategory) return;
+    
+    setIsGenerating(true);
+    setGeneratedName('');
+    
+    setTimeout(() => {
+      const names = dogNames[selectedCategory];
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      setGeneratedName(randomName);
+      setIsGenerating(false);
+    }, 1000);
+  };
 
-        .animate-background {
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-        }
+  return (
+    <div className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden p-4">
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(50,50,50,0.2),_rgba(0,0,0,0.9))]" />
+      <ParticleRing />
+      
+      {/* Moving glow effect */}
+      <div 
+        className="pointer-events-none absolute bg-violet-500/30 blur-3xl rounded-full w-96 h-96 -z-10"
+        style={{
+          transform: `translate(${glowPosition.x - 192}px, ${glowPosition.y - 192}px)`,
+          transition: 'transform 0.2s ease-out'
+        }}
+      />
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+      <Card className="max-w-2xl w-full bg-black/40 backdrop-blur-xl border border-white/10 p-8 relative z-10">
+        <div className="flex items-center justify-center gap-2 mb-12">
+          <PawPrint className="w-8 h-8 text-violet-500" />
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-500 to-fuchsia-500 bg-clip-text text-transparent">
+            Gerador de Nomes Premium
+          </h1>
+        </div>
 
-        .sparkle {
-            position: absolute;
-            pointer-events: none;
-            background: white;
-            border-radius: 50%;
-            mix-blend-mode: screen;
-        }
-
-        .rainbow-text {
-            background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: rainbow-move 8s linear infinite;
-            background-size: 200% auto;
-        }
-
-        @keyframes rainbow-move {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
-        }
-
-        .noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: 0.05;
-            z-index: 9999;
-        }
-
-        .noise::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            animation: noise .2s infinite;
-        }
-
-        @keyframes noise {
-            0% { transform: translate(0,0) }
-            10% { transform: translate(-5%,-5%) }
-            20% { transform: translate(-10%,5%) }
-            30% { transform: translate(5%,-10%) }
-            40% { transform: translate(-5%,15%) }
-            50% { transform: translate(-10%,5%) }
-            60% { transform: translate(15%,0) }
-            70% { transform: translate(0,10%) }
-            80% { transform: translate(-15%,0) }
-            90% { transform: translate(10%,5%) }
-            100% { transform: translate(5%,0) }
-        }
-
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-
-        .card-hover:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-    </style>
-</head>
-<body class="m-0 p-0 min-h-screen overflow-x-hidden">
-    <div id="root"></div>
-    <div class="noise"></div>
-    <script type="text/babel">
-        function DogNameGenerator() {
-            const [selectedCategory, setSelectedCategory] = React.useState(null);
-            const [generatedName, setGeneratedName] = React.useState('');
-            const [isGenerating, setIsGenerating] = React.useState(false);
-
-            const dogNames = {
-                cute: [
-                    'Brigadeirinho', 'Pipoca Doce', 'Paçoquinha', 'Bolinha de Neve',
-                    'Fofuxo', 'Nuggetinho', 'Pipoquinha', 'Biscoitinho',
-                    'Marshmallowzinho', 'Algodão Doce', 'Pudimzinho', 'Docinho de Coco',
-                    'Chocolatinho', 'Fubazinho', 'Mingau', 'Bolinho de Chuva'
-                ],
-                powerful: [
-                    'Super Trovão', 'Mega Pepita', 'Ultra Biscoito', 'Capitão Bocejo',
-                    'General Fofura', 'Doutor Lambida', 'Mestre Soneca', 'Rei da Bagunça',
-                    'Guardião do Sofá', 'Destruidor de Chinelos', 'Comedor de Deveres'
-                ],
-                hunter: [
-                    'Farejador de Petiscos', 'Caçador de Almofadas', 'Rastreador de Lanches',
-                    'Perseguidor do Carteiro', 'Inspetor de Sandálias', 'Detetive do Pote',
-                    'Explorador do Quintal', 'Xerife da Ração'
-                ],
-                loving: [
-                    'Xodózinho', 'Beijoqueiro', 'Carinhosinho', 'Abraçinho',
-                    'Dengosinho', 'Amorzinho', 'Coração Peludo', 'Fofurinha',
-                    'Xuxuzinho', 'Bebê Peludo', 'Carrapato de Amor'
-                ],
-                guardian: [
-                    'Guardião da Geladeira', 'Protetor do Sofá', 'Vigia do Portão',
-                    'Sentinela do Petisco', 'Defensor da Casinha', 'Escudeiro da Família',
-                    'Guardião das Guloseimas', 'Protetor do Jardim'
-                ]
-            };
-
-            const categories = [
-                { id: 'cute', label: 'Fofinhos', color: 'from-pink-500 to-purple-500' },
-                { id: 'powerful', label: 'Poderosos', color: 'from-red-500 to-orange-500' },
-                { id: 'hunter', label: 'Caçadores', color: 'from-green-500 to-emerald-500' },
-                { id: 'loving', label: 'Dengosos', color: 'from-purple-500 to-pink-500' },
-                { id: 'guardian', label: 'Protetores', color: 'from-blue-500 to-cyan-500' }
-            ];
-
-            const createSparkles = () => {
-                const sparklesContainer = document.createElement('div');
-                sparklesContainer.style.position = 'fixed';
-                sparklesContainer.style.top = '0';
-                sparklesContainer.style.left = '0';
-                sparklesContainer.style.width = '100%';
-                sparklesContainer.style.height = '100%';
-                sparklesContainer.style.pointerEvents = 'none';
-                sparklesContainer.style.zIndex = '1000';
-                document.body.appendChild(sparklesContainer);
-
-                for (let i = 0; i < 50; i++) {
-                    const sparkle = document.createElement('div');
-                    sparkle.className = 'sparkle';
-                    sparkle.style.width = Math.random() * 10 + 'px';
-                    sparkle.style.height = sparkle.style.width;
-                    sparkle.style.left = Math.random() * 100 + 'vw';
-                    sparkle.style.top = Math.random() * 100 + 'vh';
-                    sparkle.style.opacity = Math.random();
-                    sparkle.style.animation = `sparkle ${Math.random() * 2 + 1}s linear infinite`;
-                    sparklesContainer.appendChild(sparkle);
-                }
-
-                setTimeout(() => document.body.removeChild(sparklesContainer), 2000);
-            };
-
-            const generateName = () => {
-                if (!selectedCategory) return;
-                
-                setIsGenerating(true);
-                setGeneratedName('');
-                
-                // Create flash effect
-                const flash = document.createElement('div');
-                flash.style.position = 'fixed';
-                flash.style.top = '0';
-                flash.style.left = '0';
-                flash.style.width = '100%';
-                flash.style.height = '100%';
-                flash.style.backgroundColor = 'white';
-                flash.style.opacity = '0';
-                flash.style.pointerEvents = 'none';
-                flash.style.zIndex = '1000';
-                flash.style.transition = 'opacity 0.2s ease-in-out';
-                document.body.appendChild(flash);
-
-                requestAnimationFrame(() => {
-                    flash.style.opacity = '0.5';
-                    setTimeout(() => {
-                        flash.style.opacity = '0';
-                        setTimeout(() => document.body.removeChild(flash), 200);
-                    }, 50);
-                });
-
-                createSparkles();
-                
-                setTimeout(() => {
-                    const names = dogNames[selectedCategory];
-                    const randomName = names[Math.floor(Math.random() * names.length)];
-                    setGeneratedName(randomName);
-                    setIsGenerating(false);
-                    
-                    // Shake effect
-                    const root = document.getElementById('root');
-                    root.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
-                    setTimeout(() => root.style.animation = '', 500);
-                }, 1000);
-            };
-
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          {categories.map((category) => {
+            const Icon = category.icon;
             return (
-                <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 animate-background p-4 flex items-center justify-center">
-                    <div className="max-w-md w-full bg-white bg-opacity-10 backdrop-blur-xl rounded-2xl shadow-2xl p-8 card-hover">
-                        <h1 className="text-5xl font-bold text-center mb-8 font-['Righteous'] rainbow-text animate-float">
-                            🐕 Super Gerador de Nomes 🐕
-                        </h1>
-
-                        <div className="grid grid-cols-2 gap-4 mb-8">
-                            {categories.map((category) => (
-                                <button
-                                    key={category.id}
-                                    className={`p-4 rounded-xl transition-all duration-300 transform 
-                                              hover:scale-105 active:scale-95 bg-gradient-to-r 
-                                              ${category.color} text-white font-bold 
-                                              ${selectedCategory === category.id ? 'ring-4 ring-white' : ''}`}
-                                    onClick={() => setSelectedCategory(category.id)}
-                                >
-                                    {category.label}
-                                </button>
-                            ))}
-                        </div>
-
-                        <button
-                            className={`w-full py-4 px-6 bg-gradient-to-r from-purple-600 to-pink-600 
-                                     text-white font-bold rounded-xl transition-all duration-300
-                                     transform hover:scale-105 active:scale-95 hover:shadow-xl
-                                     ${isGenerating ? 'opacity-75 cursor-not-allowed' : ''}`}
-                            onClick={generateName}
-                            disabled={!selectedCategory || isGenerating}
-                        >
-                            {isGenerating ? '✨ Gerando...' : '🎲 Gerar Nome Mágico 🎲'}
-                        </button>
-
-                        {generatedName && (
-                            <div className="mt-8 text-center">
-                                <div className="text-5xl font-bold animate-bounce-custom animate-glow text-white">
-                                    ✨ {generatedName} ✨
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
+              <button
+                key={category.id}
+                className={`group relative p-4 rounded-lg border transition-all duration-500
+                          flex items-center justify-center gap-3 overflow-hidden
+                          ${selectedCategory === category.id 
+                            ? 'border-white/20 bg-white/10' 
+                            : 'border-white/5 hover:border-white/20 bg-black/20'}`}
+                onClick={() => setSelectedCategory(category.id)}
+              >
+                <ButtonGlow color={category.glow} />
+                <Icon className={`w-5 h-5 transition-transform group-hover:scale-110 duration-500
+                                ${selectedCategory === category.id ? 'text-white' : 'text-white/70'}`} />
+                <span className="font-medium">{category.label}</span>
+                <ChevronRight className={`w-4 h-4 transition-all duration-500
+                                       ${selectedCategory === category.id ? 'opacity-100' : 'opacity-0 -translate-x-2'}`} />
+              </button>
             );
-        }
+          })}
+        </div>
 
-        ReactDOM.render(<DogNameGenerator />, document.getElementById('root'));
-    </script>
-</body>
-</html>
+        <button
+          className="relative w-full py-4 px-6 rounded-lg font-medium
+                     bg-gradient-to-r from-violet-600 to-fuchsia-600
+                     hover:from-violet-500 hover:to-fuchsia-500
+                     transition-all duration-500 disabled:opacity-50
+                     group overflow-hidden"
+          onClick={generateName}
+          disabled={!selectedCategory || isGenerating}
+        >
+          <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <span className="flex items-center justify-center gap-2">
+            {isGenerating ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Gerando...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5" />
+                Gerar Nome Mágico
+              </>
+            )}
+          </span>
+        </button>
+
+        {generatedName && (
+          <div className="mt-8 text-center relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 blur-xl" />
+            <div className="relative text-4xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent
+                          animate-fade-up">
+              ✨ {generatedName} ✨
+            </div>
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+};
+
+export default DogNameGenerator;
