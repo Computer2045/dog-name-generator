@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dog Name Generator</title>
+    <title>Gerador de Nomes de Cachorro</title>
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -11,6 +11,86 @@
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel" src="app.js"></script>
+    <script type="text/babel">
+        function DogNameGenerator() {
+            const [selectedCategory, setSelectedCategory] = React.useState(null);
+            const [generatedName, setGeneratedName] = React.useState('');
+            const [isGenerating, setIsGenerating] = React.useState(false);
+
+            const dogNames = {
+                cute: ['Bolinha', 'Pipoca', 'Biscoito', 'Docinho', 'Fofinho', 'Algodão', 'Marshmallow'],
+                fierce: ['Brutus', 'Thor', 'Titan', 'Rex', 'Zeus', 'Kratos', 'Hades'],
+                hunter: ['Hunter', 'Scout', 'Ranger', 'Wolf', 'Falcon', 'Hawk', 'Arrow'],
+                loving: ['Mimo', 'Dengoso', 'Bebê', 'Fofucho', 'Xodó', 'Neném', 'Princesa'],
+                guardian: ['Guardian', 'Atlas', 'Odin', 'Knight', 'Shield', 'Sentinel', 'Warrior']
+            };
+
+            const categories = [
+                { id: 'cute', label: 'Fofinhos', color: 'bg-pink-500' },
+                { id: 'fierce', label: 'Raivosos', color: 'bg-red-500' },
+                { id: 'hunter', label: 'Caçadores', color: 'bg-green-500' },
+                { id: 'loving', label: 'Dengosos', color: 'bg-purple-500' },
+                { id: 'guardian', label: 'Protetores', color: 'bg-blue-500' }
+            ];
+
+            const generateName = () => {
+                if (!selectedCategory) return;
+                
+                setIsGenerating(true);
+                
+                setTimeout(() => {
+                    const names = dogNames[selectedCategory];
+                    const randomName = names[Math.floor(Math.random() * names.length)];
+                    setGeneratedName(randomName);
+                    setIsGenerating(false);
+                }, 500);
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
+                    <div className="max-w-md mx-auto bg-white rounded-xl shadow-xl p-6">
+                        <h1 className="text-3xl font-bold text-center mb-6 text-purple-600">
+                            🐕 Gerador de Nomes de Cachorro
+                        </h1>
+
+                        <div className="grid grid-cols-2 gap-3 mb-6">
+                            {categories.map((category) => (
+                                <button
+                                    key={category.id}
+                                    className={`p-3 rounded-lg transition-all ${
+                                        selectedCategory === category.id 
+                                        ? category.color + ' text-white' 
+                                        : 'bg-gray-100 hover:bg-gray-200'
+                                    }`}
+                                    onClick={() => setSelectedCategory(category.id)}
+                                >
+                                    {category.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button
+                            className="w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-pink-500 
+                                     text-white font-bold rounded-lg hover:opacity-90 transition-opacity"
+                            onClick={generateName}
+                            disabled={!selectedCategory || isGenerating}
+                        >
+                            {isGenerating ? 'Gerando...' : 'Gerar Nome'}
+                        </button>
+
+                        {generatedName && (
+                            <div className="mt-6 text-center">
+                                <div className="text-3xl font-bold text-purple-600">
+                                    ✨ {generatedName} ✨
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<DogNameGenerator />, document.getElementById('root'));
+    </script>
 </body>
 </html>
