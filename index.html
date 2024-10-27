@@ -42,7 +42,7 @@
         }
 
         .rainbow-text {
-            background: linear-gradient(to right, #00fff2, #00ffcc, #00f7ff, #00ccff, #0077ff, #0044ff, #001aff);
+            background: linear-gradient(to right, #FF61D8, #FE85E0, #FFA9E7, #FFC5EE, #FFD9F4, #FFE6F8, #FFF4FB);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -60,8 +60,8 @@
         }
 
         @keyframes glow {
-            from { text-shadow: 0 0 20px #fff, 0 0 30px #00ffff, 0 0 40px #00ffff, 0 0 50px #00ffff; }
-            to { text-shadow: 0 0 30px #fff, 0 0 40px #0088ff, 0 0 50px #0088ff, 0 0 60px #0088ff; }
+            from { text-shadow: 0 0 20px #fff, 0 0 30px #FF61D8, 0 0 40px #FF61D8, 0 0 50px #FF61D8; }
+            to { text-shadow: 0 0 30px #fff, 0 0 40px #FFA9E7, 0 0 50px #FFA9E7, 0 0 60px #FFA9E7; }
         }
 
         .mega-button {
@@ -70,11 +70,12 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             height: 180px !important;
             font-size: 3.5rem !important;
+            background: linear-gradient(135deg, #FF61D8, #FFA9E7) !important;
         }
 
         .mega-button:hover {
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 30px rgba(255,97,216,0.3);
         }
 
         .mega-button:active {
@@ -91,12 +92,6 @@
             z-index: 1;
             pointer-events: none;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-2px); }
-            75% { transform: translateX(2px); }
         }
 
         .category-button {
@@ -116,23 +111,12 @@
             border-color: rgba(255,255,255,0.8);
         }
 
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            position: relative;
-            z-index: 2;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
         .generated-name {
             font-size: 5rem;
             line-height: 1.2;
             padding: 2rem;
             border-radius: 20px;
-            background: rgba(0,255,255,0.1);
+            background: rgba(255,97,216,0.1);
             backdrop-filter: blur(10px);
             transform-origin: center;
             animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -158,7 +142,6 @@
                 gap: 1rem;
             }
         }
-
     </style>
 </head>
 <body>
@@ -200,11 +183,11 @@
             };
 
             const categories = [
-                { id: 'cute', label: 'Fofinhos', color: 'from-cyan-500 to-blue-500' },
-                { id: 'powerful', label: 'Poderosos', color: 'from-blue-500 to-indigo-500' },
-                { id: 'hunter', label: 'Caçadores', color: 'from-indigo-500 to-violet-500' },
-                { id: 'loving', label: 'Dengosos', color: 'from-violet-500 to-purple-500' },
-                { id: 'guardian', label: 'Protetores', color: 'from-cyan-400 to-blue-600' }
+                { id: 'cute', label: 'Fofinhos', color: 'from-pink-400 to-purple-400' },
+                { id: 'powerful', label: 'Poderosos', color: 'from-purple-400 to-pink-400' },
+                { id: 'hunter', label: 'Caçadores', color: 'from-fuchsia-400 to-pink-400' },
+                { id: 'loving', label: 'Dengosos', color: 'from-pink-400 to-fuchsia-400' },
+                { id: 'guardian', label: 'Protetores', color: 'from-purple-400 to-fuchsia-400' }
             ];
 
             const generateName = () => {
@@ -218,7 +201,7 @@
                 flash.style.left = '0';
                 flash.style.width = '100%';
                 flash.style.height = '100%';
-                flash.style.backgroundColor = '#00ffff';
+                flash.style.backgroundColor = '#FF61D8';
                 flash.style.opacity = '0';
                 flash.style.transition = 'opacity 0.2s ease';
                 flash.style.pointerEvents = 'none';
@@ -247,7 +230,7 @@
             };
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-blue-900 via-cyan-800 to-blue-900 animate-background">
+                <div className="min-h-screen bg-gradient-to-br from-fuchsia-900 via-pink-800 to-purple-900 animate-background">
                     <div className="main-container">
                         <h1 className="text-6xl md:text-8xl text-center mb-12 rainbow-text animate-float py-8">
                             🐕 Super Gerador de Nomes 🐕
@@ -258,7 +241,7 @@
                                 <button
                                     key={category.id}
                                     className={`category-button rounded-2xl bg-gradient-to-r ${category.color}
-                                              ${selectedCategory === category.id ? 'ring-4 ring-cyan-400' : ''}`}
+                                              ${selectedCategory === category.id ? 'ring-4 ring-pink-400' : ''}`}
                                     onClick={() => setSelectedCategory(category.id)}
                                 >
                                     {category.label}
@@ -267,8 +250,7 @@
                         </div>
 
                         <button
-                            className={`mega-button w-full bg-gradient-to-r from-cyan-600 to-blue-600 
-                                     text-white rounded-2xl mb-12 
+                            className={`mega-button w-full text-white rounded-2xl mb-12 
                                      ${isGenerating ? 'opacity-75 cursor-not-allowed' : ''}`}
                             onClick={generateName}
                             disabled={!selectedCategory || isGenerating}
