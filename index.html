@@ -42,7 +42,7 @@
         }
 
         .rainbow-text {
-            background: linear-gradient(to right, #FF61D8, #FE85E0, #FFA9E7, #FFC5EE, #FFD9F4, #FFE6F8, #FFF4FB);
+            background: linear-gradient(to right, #64ffda, #7ee8fa, #80d0c7, #88e1f2, #a6c1ee, #c1c8f1, #dbd4f0);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -60,8 +60,8 @@
         }
 
         @keyframes glow {
-            from { text-shadow: 0 0 20px #fff, 0 0 30px #FF61D8, 0 0 40px #FF61D8, 0 0 50px #FF61D8; }
-            to { text-shadow: 0 0 30px #fff, 0 0 40px #FFA9E7, 0 0 50px #FFA9E7, 0 0 60px #FFA9E7; }
+            from { text-shadow: 0 0 20px #fff, 0 0 30px #64ffda, 0 0 40px #64ffda, 0 0 50px #64ffda; }
+            to { text-shadow: 0 0 30px #fff, 0 0 40px #a6c1ee, 0 0 50px #a6c1ee, 0 0 60px #a6c1ee; }
         }
 
         .mega-button {
@@ -70,12 +70,12 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             height: 180px !important;
             font-size: 3.5rem !important;
-            background: linear-gradient(135deg, #FF61D8, #FFA9E7) !important;
+            background: linear-gradient(135deg, #64ffda, #a6c1ee) !important;
         }
 
         .mega-button:hover {
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(255,97,216,0.3);
+            box-shadow: 0 15px 30px rgba(100,255,218,0.3);
         }
 
         .mega-button:active {
@@ -116,8 +116,16 @@
             line-height: 1.2;
             padding: 2rem;
             border-radius: 20px;
-            background: rgba(255,97,216,0.1);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, 
+                rgba(100, 255, 218, 0.15), 
+                rgba(166, 193, 238, 0.15),
+                rgba(219, 212, 240, 0.15)
+            );
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 8px 32px rgba(100, 255, 218, 0.2),
+                inset 0 0 32px rgba(166, 193, 238, 0.1);
             transform-origin: center;
             animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
@@ -183,11 +191,11 @@
             };
 
             const categories = [
-                { id: 'cute', label: 'Fofinhos', color: 'from-pink-400 to-purple-400' },
-                { id: 'powerful', label: 'Poderosos', color: 'from-purple-400 to-pink-400' },
-                { id: 'hunter', label: 'Caçadores', color: 'from-fuchsia-400 to-pink-400' },
-                { id: 'loving', label: 'Dengosos', color: 'from-pink-400 to-fuchsia-400' },
-                { id: 'guardian', label: 'Protetores', color: 'from-purple-400 to-fuchsia-400' }
+                { id: 'cute', label: 'Fofinhos', color: 'from-teal-300 to-cyan-300' },
+                { id: 'powerful', label: 'Poderosos', color: 'from-cyan-300 to-blue-300' },
+                { id: 'hunter', label: 'Caçadores', color: 'from-blue-300 to-indigo-300' },
+                { id: 'loving', label: 'Dengosos', color: 'from-indigo-300 to-violet-300' },
+                { id: 'guardian', label: 'Protetores', color: 'from-violet-300 to-purple-300' }
             ];
 
             const generateName = () => {
@@ -201,7 +209,7 @@
                 flash.style.left = '0';
                 flash.style.width = '100%';
                 flash.style.height = '100%';
-                flash.style.backgroundColor = '#FF61D8';
+                flash.style.backgroundColor = '#64ffda';
                 flash.style.opacity = '0';
                 flash.style.transition = 'opacity 0.2s ease';
                 flash.style.pointerEvents = 'none';
@@ -230,7 +238,7 @@
             };
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-fuchsia-900 via-pink-800 to-purple-900 animate-background">
+                <div className="min-h-screen bg-gradient-to-br from-teal-800 via-cyan-700 to-blue-800 animate-background">
                     <div className="main-container">
                         <h1 className="text-6xl md:text-8xl text-center mb-12 rainbow-text animate-float py-8">
                             🐕 Super Gerador de Nomes 🐕
@@ -241,7 +249,7 @@
                                 <button
                                     key={category.id}
                                     className={`category-button rounded-2xl bg-gradient-to-r ${category.color}
-                                              ${selectedCategory === category.id ? 'ring-4 ring-pink-400' : ''}`}
+                                              ${selectedCategory === category.id ? 'ring-4 ring-teal-300' : ''}`}
                                     onClick={() => setSelectedCategory(category.id)}
                                 >
                                     {category.label}
